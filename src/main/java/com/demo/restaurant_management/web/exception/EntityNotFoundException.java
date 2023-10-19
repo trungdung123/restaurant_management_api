@@ -1,7 +1,9 @@
 package com.demo.restaurant_management.web.exception;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class EntityNotFoundException extends RuntimeException {
 
@@ -17,5 +19,4 @@ public class EntityNotFoundException extends RuntimeException {
         this.entityId = entityId;
         this.entityName = entityName;
     }
-
 }

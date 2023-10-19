@@ -29,5 +29,4 @@ public class PagingRes extends Response {
         private long totalPage;
         private long totalRecord;
     }
-
 }

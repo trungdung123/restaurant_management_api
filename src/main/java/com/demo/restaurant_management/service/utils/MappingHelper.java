@@ -6,7 +6,6 @@ import org.modelmapper.AbstractCondition;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -17,8 +16,11 @@ import java.util.stream.Collectors;
 @Component
 public class MappingHelper {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
+    public MappingHelper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
     public <T, H> List<T> mapList(List<H> inputData, Class<T> clazz) {
         return CollectionUtils.isEmpty(inputData) ?
@@ -53,5 +55,4 @@ public class MappingHelper {
             }
         };
     }
-
 }

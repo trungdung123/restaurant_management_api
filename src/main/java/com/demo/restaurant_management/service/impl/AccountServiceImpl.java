@@ -50,19 +50,6 @@ public class AccountServiceImpl implements AccountService {
         account.setEmail(createAccountRequest.getEmail());
         account.setPassword(passwordEncoder.encode(createAccountRequest.getPassword()));
 
-//        Set<String> authoritiesString = createAccountRequest.getAuthorities();
-//        Set<Authority> authorities = new HashSet<>();
-//
-//        if (authoritiesString == null) {
-//            authorities.add(authorityRepository.findByName(AuthoritiesConstants.CUSTOMER).orElseThrow(
-//                    () -> new EntityNotFoundException(Authority.class.getName(), AuthoritiesConstants.CUSTOMER)
-//            ));
-//        } else {
-//            authoritiesString.forEach(authority -> authorities.add(authorityRepository.findByName(authority).orElseThrow(
-//                    () -> new EntityNotFoundException(Authority.class.getName(), authority)
-//            )));
-//        }
-//        account.setAuthorities(authorities);
         account.setRole(createAccountRequest.getRole());
         accountRepository.save(account);
 

@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-
     private final AccountRepository accountRepository;
     private final ProfileRepository profileRepository;
     private final AuthenticationManager authenticationManager;
@@ -61,7 +60,6 @@ public class AuthServiceImpl implements AuthService {
         } catch (AuthenticationException authenticationException) {
             throw new ServiceException("Username or password is invalid", "err.authorize.unauthorized");
         }
-
     }
 
     @Override

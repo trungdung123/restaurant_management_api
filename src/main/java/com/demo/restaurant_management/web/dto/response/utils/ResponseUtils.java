@@ -2,6 +2,7 @@ package com.demo.restaurant_management.web.dto.response.utils;
 
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -34,6 +35,10 @@ public class ResponseUtils {
 
     public ResponseEntity<Response> created(Object obj) {
         return new ResponseEntity<>(Response.of("Created", obj), HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<Response> ok(Page<?> page) {
+        return ResponseEntity.ok(PagingRes.of(page));
     }
 
     public ResponseEntity<Response> created() {
