@@ -8,8 +8,10 @@ import com.demo.restaurant_management.web.dto.request.utils.PagingRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface MenuItemService {
-    Page<MenuItemDto> getAllMenuItems(MenuItemCriteria menuItemCriteria);
+//    Page<MenuItemDto> getAllMenuItems(MenuItemCriteria menuItemCriteria);
 
     MenuItemDto getMenuItemById(Integer menuItemId);
 
@@ -18,4 +20,8 @@ public interface MenuItemService {
     MenuItemDto updateMenuItem(Integer menuItemId, UpdateMenuItemRequest menuItemRequest);
 
     void deleteMenuItem(Integer menuItemId);
+
+    List<MenuItemDto> getAllMenuItems();
+
+    List<MenuItemDto> getMenuItemOfCategory(Integer categoryId);
 }

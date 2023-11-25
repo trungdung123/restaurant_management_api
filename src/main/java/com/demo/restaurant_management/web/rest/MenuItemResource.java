@@ -2,9 +2,7 @@ package com.demo.restaurant_management.web.rest;
 
 import com.demo.restaurant_management.service.MenuItemService;
 import com.demo.restaurant_management.web.dto.request.CreateMenuItemRequest;
-import com.demo.restaurant_management.web.dto.request.MenuItemCriteria;
 import com.demo.restaurant_management.web.dto.request.UpdateMenuItemRequest;
-import com.demo.restaurant_management.web.dto.request.utils.PagingRequest;
 import com.demo.restaurant_management.web.dto.response.utils.ResponseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +14,23 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/menu-items")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class MenuItemResource {
     private final MenuItemService menuItemService;
 
+//    @GetMapping
+//    public ResponseEntity<?> getAllMenuItems(MenuItemCriteria menuItemCriteria) {
+//        return ResponseUtils.ok(menuItemService.getAllMenuItems(menuItemCriteria));
+//    }
+
     @GetMapping
-    public ResponseEntity<?> getAllMenuItems(MenuItemCriteria menuItemCriteria) {
-        return ResponseUtils.ok(menuItemService.getAllMenuItems(menuItemCriteria));
+    public ResponseEntity<?> getAllMenuItems() {
+        return ResponseUtils.ok(menuItemService.getAllMenuItems());
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<?> getMenuItemOfCategory(@PathVariable Integer categoryId) {
+        return ResponseUtils.ok(menuItemService.getMenuItemOfCategory(categoryId));
     }
 
     @GetMapping("/{menuItemId}")

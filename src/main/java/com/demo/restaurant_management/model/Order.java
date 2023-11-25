@@ -1,5 +1,6 @@
 package com.demo.restaurant_management.model;
 
+import com.demo.restaurant_management.model.constants.OrderStatus;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -25,4 +26,5 @@ public class Order {
     private String paymentMethod;
     private Float totalAmount;
     private String note;
+    private OrderStatus status;
 }

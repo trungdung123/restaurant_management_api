@@ -11,23 +11,23 @@ import com.demo.restaurant_management.service.utils.MappingHelper;
 import com.demo.restaurant_management.web.dto.CategoryDto;
 import com.demo.restaurant_management.web.dto.MenuItemDto;
 import com.demo.restaurant_management.web.dto.request.CreateMenuItemRequest;
-import com.demo.restaurant_management.web.dto.request.MenuItemCriteria;
 import com.demo.restaurant_management.web.dto.request.UpdateMenuItemRequest;
 import com.demo.restaurant_management.web.exception.EntityNotFoundException;
 import com.demo.restaurant_management.web.rest.ImageResource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -39,16 +39,41 @@ public class MenuItemServiceImpl implements MenuItemService {
     private final MappingHelper mappingHelper;
     private final Path root = Paths.get("src/main/resources/static/image");
 
+//    @Override
+//    public Page<MenuItemDto> getAllMenuItems(MenuItemCriteria menuItemCriteria) {
+//        return menuItemRepository.findAll(
+//                menuItemCriteria.toSpecification(),
+//                menuItemCriteria.getPagingRequest().makePageable())
+//                .map(e -> {
+//                    var menuItemDto = mappingHelper.map(e, MenuItemDto.class);
+//                    menuItemDto.setCategoryDto(mappingHelper.map(e.getCategory(), CategoryDto.class));
+//                    return menuItemDto;
+//                });
+//    }
+
     @Override
-    public Page<MenuItemDto> getAllMenuItems(MenuItemCriteria menuItemCriteria) {
-        return menuItemRepository.findAll(
-                menuItemCriteria.toSpecification(),
-                menuItemCriteria.getPagingRequest().makePageable())
+    public List<MenuItemDto> getAllMenuItems() {
+        return menuItemRepository.findAll()
+                .stream()
                 .map(e -> {
                     var menuItemDto = mappingHelper.map(e, MenuItemDto.class);
                     menuItemDto.setCategoryDto(mappingHelper.map(e.getCategory(), CategoryDto.class));
                     return menuItemDto;
-                });
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MenuItemDto> getMenuItemOfCategory(Integer categoryId) {
+        return menuItemRepository
+                .findByCategory_Id(categoryId)
+                .stream()
+                .map(e -> {
+                    var menuItemDto = mappingHelper.map(e, MenuItemDto.class);
+                    menuItemDto.setCategoryDto(mappingHelper.map(e.getCategory(), CategoryDto.class));
+                    return menuItemDto;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -127,6 +152,17 @@ public class MenuItemServiceImpl implements MenuItemService {
     public void deleteMenuItem(Integer menuItemId) {
         var menuItem = menuItemRepository.findById(menuItemId)
                 .orElseThrow(() -> new EntityNotFoundException(MenuItem.class.getName(), menuItemId.toString()));
-        menuItemRepository.deleteById(menuItemId);
+        var images = imageRepository.findByMenuItem_Id(menuItemId);
+
+        images.forEach(e -> {
+            Path path = Paths.get(root + "/" + e.getTitle());
+            try {
+                Files.delete(path);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+        imageRepository.deleteAll(images);
+        menuItemRepository.delete(menuItem);
     }
 }
